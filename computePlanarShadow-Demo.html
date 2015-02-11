@@ -206,6 +206,9 @@
 			cylinderShadow.computePlanarShadow( cylinderParent, groundPlane, lightPosition4D );
 			torusShadow.computePlanarShadow( torusParent, groundPlane, lightPosition4D );
 			
+			// uncomment next line to move camera up and down
+			//camera.position.y = Math.sin( verticalAngle ) * 2 + 2;
+			
 			//render the scene with our camera
 			renderer.render( scene, camera );
 			
@@ -233,10 +236,12 @@
 			if ( useDirectionalLight ) {
 				
 				sunLight.position.set( 4, 6, 0 );
+				sunLight.lookAt( scene.position );
+				
 				lightPosition4D.x = sunLight.position.x;
 				lightPosition4D.y = sunLight.position.y;
 				lightPosition4D.z = sunLight.position.z;
-				lightPosition4D.w = 0.0000001;
+				lightPosition4D.w = 0.0000001; // directionalLight like sunlight
 				
 				arrowHelper1.visible = true;
 				arrowHelper2.visible = true;
@@ -251,13 +256,16 @@
 			else {
 				
 				sunLight.position.set( 0, 7, -2 );
+				sunLight.lookAt( scene.position );
+				
 				lightHolder.position.copy( sunLight.position );
 				lightHolder.position.y += 0.12;
 				lightSphere.position.copy( sunLight.position );
+				
 				lightPosition4D.x = sunLight.position.x;
 				lightPosition4D.y = sunLight.position.y;
 				lightPosition4D.z = sunLight.position.z;
-				lightPosition4D.w = 0.8;
+				lightPosition4D.w = 0.8; // pointLight like lightbulb or candle
 				
 				arrowHelper1.visible = false;
 				arrowHelper2.visible = false;
