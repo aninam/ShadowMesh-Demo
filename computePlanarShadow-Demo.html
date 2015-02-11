@@ -80,7 +80,7 @@
 			lightPosition4D.y = sunLight.position.y;
 			lightPosition4D.z = sunLight.position.z;
 			// amount of light-ray divergence. Ranging from:
-			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence), like lightbulb or campfire
+			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
 			lightPosition4D.w = 0.0000001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
 			
 			sunLight.lookAt( scene.position );
@@ -101,11 +101,17 @@
 			arrowHelper3 = new THREE.ArrowHelper( arrowDirection, arrowPosition3, 0.72, 0xffff00, 0.2, 0.08 );
 			scene.add( arrowHelper3 );
 			
-			var lightSphereGeometry = new THREE.SphereGeometry( 0.1 );
-			var lightSphereMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+			var lightSphereGeometry = new THREE.SphereGeometry( 0.085 );
+			var lightSphereMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
 			lightSphere = new THREE.Mesh( lightSphereGeometry, lightSphereMaterial );
 			scene.add( lightSphere );
 			lightSphere.visible = false;
+			
+			var lightHolderGeometry = new THREE.CylinderGeometry( 0.05, 0.04, 0.13 );
+			var lightHolderMaterial = new THREE.MeshBasicMaterial( { color: 0x444444 } );
+			lightHolder = new THREE.Mesh( lightHolderGeometry, lightHolderMaterial );
+			scene.add( lightHolder );
+			lightHolder.visible = false;
 			
 			var floorGeometry = new THREE.PlaneBufferGeometry( 20, 40, 1, 1 );
 			var floorMaterial = new THREE.MeshLambertMaterial( { 
@@ -120,6 +126,7 @@
 			var cubeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
 			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
 			cubeParent = new THREE.Mesh( cubeGeometry, cubeMaterial );
+			cubeParent.position.z = -1;
 			scene.add( cubeParent );
 			
 			var cubeShadowGeometry = cubeParent.geometry.clone();
@@ -234,14 +241,18 @@
 				arrowHelper1.visible = true;
 				arrowHelper2.visible = true;
 				arrowHelper3.visible = true;
+				
 				lightSphere.visible = false;
+				lightHolder.visible = false;
 				
 				document.getElementById( 'lightButton' ).value = "Switch to PointLight" ;
 				
 			}
 			else {
 				
-				sunLight.position.set( 0, 6, -2 );
+				sunLight.position.set( 0, 7, -2 );
+				lightHolder.position.copy( sunLight.position );
+				lightHolder.position.y += 0.12;
 				lightSphere.position.copy( sunLight.position );
 				lightPosition4D.x = sunLight.position.x;
 				lightPosition4D.y = sunLight.position.y;
@@ -251,7 +262,9 @@
 				arrowHelper1.visible = false;
 				arrowHelper2.visible = false;
 				arrowHelper3.visible = false;
+				
 				lightSphere.visible = true;
+				lightHolder.visible = true;
 				
 				document.getElementById( 'lightButton' ).value = "Switch to DirectionalLight" ;
 				
