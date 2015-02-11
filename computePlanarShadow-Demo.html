@@ -44,7 +44,6 @@
 		
 		var ambientLight = new THREE.AmbientLight( 'rgb(30,30,30)', 1 );
 		var sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
-		//var pointLight = new THREE.PointLight( 'rgb(255,255,255)', 1 );
 		var useDirectionalLight = true;
 		var arrowHelper1, arrowHelper2, arrowHelper3;
 		var arrowDirection = new THREE.Vector3();
@@ -81,11 +80,8 @@
 			lightPosition4D.y = sunLight.position.y;
 			lightPosition4D.z = sunLight.position.z;
 			// amount of light-ray divergence. Ranging from:
-			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
+			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence), like lightbulb or campfire
 			lightPosition4D.w = 0.0000001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
-			
-			// uncomment line below for max light-ray divergence, like lightbulb or campfire
-			//lightPosition4D.w = 1.0; 
 			
 			sunLight.lookAt( scene.position );
 			scene.add( sunLight );
@@ -202,38 +198,6 @@
 			cubeShadow.computePlanarShadow( cubeParent, groundPlane, lightPosition4D );
 			cylinderShadow.computePlanarShadow( cylinderParent, groundPlane, lightPosition4D );
 			torusShadow.computePlanarShadow( torusParent, groundPlane, lightPosition4D );
-			/*
-			var dot = groundPlane.normal.x * lightPosition4D.x +
-				  groundPlane.normal.y * lightPosition4D.y +
-				  groundPlane.normal.z * lightPosition4D.z +
-				  groundPlane.constant * lightPosition4D.w;
-
-			var sme = shadowMatrix.elements;
-
-			sme[ 0 ] = dot - lightPosition4D.x * groundPlane.normal.x;
-			sme[ 4 ] = - lightPosition4D.x * groundPlane.normal.y;
-			sme[ 8 ] = - lightPosition4D.x * groundPlane.normal.z;
-			sme[ 12 ] = - lightPosition4D.x * groundPlane.constant;
-
-			sme[ 1 ] = - lightPosition4D.y * groundPlane.normal.x;
-			sme[ 5 ] = dot - lightPosition4D.y * groundPlane.normal.y;
-			sme[ 9 ] = - lightPosition4D.y * groundPlane.normal.z;
-			sme[ 13 ] = - lightPosition4D.y * groundPlane.constant;
-
-			sme[ 2 ] = - lightPosition4D.z * groundPlane.normal.x;
-			sme[ 6 ] = - lightPosition4D.z * groundPlane.normal.y;
-			sme[ 10 ] = dot - lightPosition4D.z * groundPlane.normal.z;
-			sme[ 14 ] = - lightPosition4D.z * groundPlane.constant;
-
-			sme[ 3 ] = - lightPosition4D.w * groundPlane.normal.x;
-			sme[ 7 ] = - lightPosition4D.w * groundPlane.normal.y;
-			sme[ 11 ] = - lightPosition4D.w * groundPlane.normal.z;
-			sme[ 15 ] = dot - lightPosition4D.w * groundPlane.constant;
-
-			cubeShadow.matrix.multiply( shadowMatrix );
-			cubeShadow.matrix.multiply( cubeParent.matrix );
-			cubeShadow.matrixAutoUpdate = false;
-			*/
 			
 			//render the scene with our camera
 			renderer.render( scene, camera );
