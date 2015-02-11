@@ -12,7 +12,7 @@ Example usage: <br>
 First create a THREE.js Light object and place it in the THREE.Scene. If it is a directional light, aim it accordingly using lookAt( scene.position ):
 ```javascript
 var light = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
-sunLight.position.set( 400, 600, 0 );
+light.position.set( 400, 600, 0 );
 light.lookAt( scene.position );
 scene.add( light );
 ```
