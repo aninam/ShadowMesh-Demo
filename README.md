@@ -27,7 +27,7 @@ var cubeParent = new THREE.Mesh( cubeGeometry, cubeMaterial );
 cubeParent.position.y = 5;
 scene.add( cubeParent );
 ```
-Next create a THREE.Mesh object that will be the actual shadow object.  This Mesh will be a copy of its parent Mesh, but its geometry will get squashed down into the specified plane.  Make the material Basic and black in color, but transparent so you can see the plane below the shadow a little bit. Also disable depthWrite and turn off the shadowMesh's frustumCulled property:
+Next create a THREE.Mesh object that will be the actual shadow object.  This Mesh will be a copy of its parent Mesh, but its geometry will get squashed down into the specified plane.  Make the material Basic (no lighting) and black in color, but transparent so you can see the plane below the shadow a little bit. Also disable depthWrite and turn off the shadowMesh's frustumCulled property:
 ```javascript
 var cubeShadowGeometry = cubeParent.geometry.clone();
 var shadowMaterial = new THREE.MeshBasicMaterial( { 
