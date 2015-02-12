@@ -46,6 +46,7 @@ var upVector = new THREE.Vector3( 0, 1, 0 );
 var groundPlane = new THREE.Plane( upVector, 0 );
 ```
 The above code defines a plane with a normal vector that points straight up from the plane's surface and a distance constant of 0 units from the origin.  This defines a plane that is like the floor or ground beneath us.  This assumes that the floor or ground's position is located at y = 0 units from the scene origin.  If your floor had a y component of -5, then you would supply -5 instead of 0 as the second argument in the plane's constructor function.  The matching of these numbers ensures that the shadow will appear level with the plane, and not incorrectly above or below it. <br>
+<br>
 The last initialization step is setting up the 4D vector that defines the light source.  The first 3 components are the familiar x, y, and z position coordinates of the lightsource.  The 4th component, or w, is a value between 0.0 and 1.0 that indicates the amount of divergence that the light rays have from each other.  A value slightly greater than 0.0 specifies no divergence, or parallel rays, like sunlight.  A value of 1.0 specifies maximum divergence, like from a lightbulb or candle.
 ```javascript
 var lightPosition4D = new THREE.Vector4();
@@ -58,5 +59,10 @@ The above 'w' value indicates minimum divergence, like sunlight.  For a pointLig
 ```javascript
 lightPosition4D.w = 1.0;
 ```
+Although there was quite a bit of setup, the actual usage of the shadow method is just 1 line of code!  Inside the animation loop, call the 'computePlanarShadow' function on the shadowMesh.  This will do all the math magic to squash the shadowMesh's geometry flat and place it flat on the plane:
+```javascript
+cubeShadow.computePlanarShadow( cubeParent, groundPlane, lightPosition4D );
+```
+The above method automatically rotates, positions, and scales the shadow to match its parent object, like shadows in the real world do.
 <br>
-Example usage is detailed in the demo's .html source.
+More example usage can be found in the demo's .html source.
