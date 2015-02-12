@@ -83,7 +83,7 @@
 			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
 			lightPosition4D.w = 0.0000001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
 			
-			// uncomment line below for max light-ray divergence, like lightbulb or campfire
+			// uncomment line below for max light-ray divergence, like lightbulb or candle
 			//lightPosition4D.w = 1.0; 
 			
 			sunLight.lookAt( scene.position );
