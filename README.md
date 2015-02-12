@@ -4,7 +4,9 @@ A simple demo showing use of the THREE.Mesh.computePlanarShadow() method. Click 
 [computePlanarShadowDemo](http://erichlof.github.io/computePlanarShadow-Demo/computePlanarShadow-Demo.html)  <br>
 
 The function signature is: <br>
-THREE.Mesh.computePlanarShadow( parentMesh, plane, lightPosition4D ); <br>
+```javascript
+THREE.Mesh.computePlanarShadow( parentMesh, plane, lightPosition4D );
+```
 <br>
 This method must take 3 arguments: <br> 
 1. A THREE.Mesh() object - the shadow-casting parent mesh <br>
