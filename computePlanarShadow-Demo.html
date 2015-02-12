@@ -50,7 +50,6 @@
 		var arrowPosition1 = new THREE.Vector3();
 		var arrowPosition2 = new THREE.Vector3();
 		var arrowPosition3 = new THREE.Vector3();
-		var frameTime = 0;
 		var floor;
 		var lightSphere;
 		var cubeParent, cubeShadow;
@@ -59,9 +58,9 @@
 		var upVector = new THREE.Vector3( 0, 1, 0 );
 		var groundPlane = new THREE.Plane( upVector, 0 );
 		var lightPosition4D = new THREE.Vector4();
-		var shadowMatrix = new THREE.Matrix4();
 		var verticalAngle = 0;
 		var horizontalAngle = 0;
+		var frameTime = 0;
 		
 		
 		init();
@@ -129,14 +128,13 @@
 			cubeParent.position.z = -1;
 			scene.add( cubeParent );
 			
-			var cubeShadowGeometry = cubeParent.geometry.clone();
 			var shadowMaterial = new THREE.MeshBasicMaterial( { 
 				color: 0x000000,
 				transparent: true,
 				opacity: 0.6,
 				depthWrite: false
 			} );
-			cubeShadow = new THREE.Mesh( cubeShadowGeometry, shadowMaterial );
+			cubeShadow = new THREE.Mesh( cubeGeometry, shadowMaterial );
 			cubeShadow.frustumCulled = false;
 			scene.add( cubeShadow );
 			
@@ -147,8 +145,7 @@
 			cylinderParent.position.z = -2.5;
 			scene.add( cylinderParent );
 			
-			var cylinderShadowGeometry = cylinderParent.geometry.clone();
-			cylinderShadow = new THREE.Mesh( cylinderShadowGeometry, shadowMaterial );
+			cylinderShadow = new THREE.Mesh( cylinderGeometry, shadowMaterial );
 			cylinderShadow.frustumCulled = false;
 			scene.add( cylinderShadow );
 			
@@ -159,8 +156,7 @@
 			torusParent.position.z = -6;
 			scene.add( torusParent );
 			
-			var torusShadowGeometry = torusParent.geometry.clone();
-			torusShadow = new THREE.Mesh( torusShadowGeometry, shadowMaterial );
+			torusShadow = new THREE.Mesh( torusGeometry, shadowMaterial );
 			torusShadow.frustumCulled = false;
 			scene.add( torusShadow );
 			
@@ -278,7 +274,7 @@
 				
 			}
 			
-		}
+		} // end function lightButtonHandler()
 		
 		
 	</script>
