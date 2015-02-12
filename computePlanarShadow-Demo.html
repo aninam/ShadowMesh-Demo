@@ -55,8 +55,9 @@
 		var cubeParent, cubeShadow;
 		var cylinderParent, cylinderShadow;
 		var torusParent, torusShadow;
-		var upVector = new THREE.Vector3( 0, 1, 0 );
-		var groundPlane = new THREE.Plane( upVector, 0 );
+		var normalVector = new THREE.Vector3( 0, 1, 0 );
+		var planeConstant = 0; // this value must match the floor/ground's y position
+		var groundPlane = new THREE.Plane( normalVector, planeConstant );
 		var lightPosition4D = new THREE.Vector4();
 		var verticalAngle = 0;
 		var horizontalAngle = 0;
@@ -81,6 +82,9 @@
 			// amount of light-ray divergence. Ranging from:
 			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
 			lightPosition4D.w = 0.0000001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
+			
+			// uncomment line below for max light-ray divergence, like lightbulb or campfire
+			//lightPosition4D.w = 1.0; 
 			
 			sunLight.lookAt( scene.position );
 			scene.add( sunLight );
@@ -118,6 +122,7 @@
 				depthTest: false
 			} );
 			floor = new THREE.Mesh( floorGeometry, floorMaterial );
+			//floor.position.y = 0; //this value should match the planeConstant parameter
 			floor.rotation.x = Math.PI / -2;
 			scene.add( floor );
 			
@@ -239,7 +244,7 @@
 				lightPosition4D.x = sunLight.position.x;
 				lightPosition4D.y = sunLight.position.y;
 				lightPosition4D.z = sunLight.position.z;
-				lightPosition4D.w = 0.0000001; // directionalLight like sunlight
+				lightPosition4D.w = 0.0000001;
 				
 				arrowHelper1.visible = true;
 				arrowHelper2.visible = true;
@@ -255,7 +260,6 @@
 				
 				sunLight.position.set( 0, 7, -2 );
 				sunLight.lookAt( scene.position );
-				
 				lightHolder.position.copy( sunLight.position );
 				lightHolder.position.y += 0.12;
 				lightSphere.position.copy( sunLight.position );
@@ -263,7 +267,7 @@
 				lightPosition4D.x = sunLight.position.x;
 				lightPosition4D.y = sunLight.position.y;
 				lightPosition4D.z = sunLight.position.z;
-				lightPosition4D.w = 0.8; // pointLight like lightbulb or candle
+				lightPosition4D.w = 0.8;
 				
 				arrowHelper1.visible = false;
 				arrowHelper2.visible = false;
