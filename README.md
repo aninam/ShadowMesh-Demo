@@ -3,7 +3,7 @@ A simple demo showing use of the THREE.ShadowMesh() object. Click on the link be
 
 [ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-Demo.html)  <br>
 
-An example creating a ShadowMesh: <br>
+An example of creating a ShadowMesh: <br>
 ```javascript
 var shadow = new THREE.ShadowMesh( parentMesh );
 ```
