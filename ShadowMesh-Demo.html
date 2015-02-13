@@ -27,8 +27,8 @@
 	</div>
 	
 
-	<script src="three.min.js"></script> 
-	<script src="ShadowMesh.js"></script> 
+	<script src="js/three.min.js"></script> 
+	<script src="js/ShadowMesh.js"></script> 
 	
 	<script>
 		
@@ -49,13 +49,13 @@
 		var arrowPosition1 = new THREE.Vector3();
 		var arrowPosition2 = new THREE.Vector3();
 		var arrowPosition3 = new THREE.Vector3();
-		var ground;
+		var groundMesh;
 		var lightSphere, lightHolder;
 		var cubeParent, cubeShadow;
 		var cylinderParent, cylinderShadow;
 		var torusParent, torusShadow;
 		var normalVector = new THREE.Vector3( 0, 1, 0 );
-		var planeConstant = 0; // this value must match the ground's y position
+		var planeConstant = 0; // this value must match the groundMesh's y position
 		var groundPlane = new THREE.Plane( normalVector, planeConstant );
 		var lightPosition4D = new THREE.Vector4();
 		var verticalAngle = 0;
@@ -114,16 +114,15 @@
 			lightHolder = new THREE.Mesh( lightHolderGeometry, lightHolderMaterial );
 			scene.add( lightHolder );
 			lightHolder.visible = false;
-			
-			var groundGeometry = new THREE.PlaneBufferGeometry( 20, 40, 1, 1 );
+				//the height of this box must be very thin = 0.01 so it can receive shadows correctly
+			var groundGeometry = new THREE.BoxGeometry( 20, 0.01, 40 );
 			var groundMaterial = new THREE.MeshLambertMaterial( { 
 				color: 0x00aa00,
 				depthTest: false
 			} );
-			ground = new THREE.Mesh( groundGeometry, groundMaterial );
-			ground.position.y = 0; //this value must match the planeConstant parameter above
-			ground.rotation.x = Math.PI / -2;
-			scene.add( ground );
+			groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+			groundMesh.position.y = 0; //this value must match the planeConstant parameter above
+			scene.add( groundMesh );
 			
 			// CUBE and CUBE's SHADOW
 			var cubeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
