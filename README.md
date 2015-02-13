@@ -3,6 +3,9 @@ A simple demo showing use of the THREE.ShadowMesh() object. Click on the link be
 
 [ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-Demo.html)  <br>
 
+A more advanced Demo with multiple shadow instances for each wall:
+[ShadowMesh-MultipleInstancesDemo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-MultipleInstancesDemo.html)  <br>
+
 An example of creating a ShadowMesh: <br>
 ```javascript
 var shadow = new THREE.ShadowMesh( parentMesh );
