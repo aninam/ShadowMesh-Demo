@@ -71,10 +71,10 @@ The above 'w' value indicates minimum divergence, like sunlight.  For a pointLig
 ```javascript
 lightPosition4D.w = 1.0;
 ```
-Although there was quite a bit of setup, the actual usage of the shadow method is just 1 line of code!  Inside the animation loop, call the 'update' function on the ShadowMesh.  This will do all the math magic to squash the ShadowMesh's geometry flat and place it flat on the desired plane:
+Although that was quite a bit of setup, the actual usage of the update method is just 1 line of code!  Inside the animation loop, call the 'update' function on the ShadowMesh:
 ```javascript
 cubeShadow.update( groundPlane, lightPosition4D );
 ```
-The above method takes 2 parameters - the groundPlane (THREE.Plane) that was defined earlier, and the lightPosition4D vector (THREE.Vector4) that was also defined earlier.  The update method automatically flattens the shadow down onto the specified groundPlane plane object, then skews it using calculations from the supplied lightPosition4D vector.  It then automatically rotates, positions, and scales the shadow to match its parent object, like shadows in the real world do! <br>
+The above method takes 2 parameters - the groundPlane (THREE.Plane) that was defined earlier, and the lightPosition4D vector (THREE.Vector4) that was also defined earlier.  The update method automatically flattens the shadow down onto the specified groundPlane THREE.Plane object, then skews it using calculations from the supplied lightPosition4D vector.  It then automatically rotates, positions, and scales the shadow to match its parent object, like shadows in the real world do! <br>
 <br>
 More example usage can be found in the demo's .html source.
