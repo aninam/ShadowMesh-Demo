@@ -51,9 +51,9 @@ groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
 groundMesh.position.y = 0; // this value must match the planeConstant parameter below
 scene.add( groundMesh );
 ```
-Now create and define a THREE.Plane() object.  This is the plane in which the shadow will appear.  A THREE.Plane() is made up of 2 components: a THREE.Vector3 normal that points away from the plane's surface, and a numerical constant.  This constant can be thought of as the plane's 'distance' from the origin.  Here's how to define a plane in Three.js: 
+Now create and define a THREE.Plane() object.  This is the plane in which the shadow will appear.  A THREE.Plane() is made up of 2 components: a THREE.Vector3 normal that points away from the plane's surface, and a numerical constant.  This constant can be thought of as the plane's 'distance' from the origin.  Here's how to setup and define a plane in Three.js: 
 ```javascript
-var normalVector = new THREE.Vector3( 0, 1, 0 );
+var normalVector = new THREE.Vector3( 0, 1, 0 ); // this normal vector points straight up
 var planeConstant = 0; // this value must match the groundMesh's y position above
 var groundPlane = new THREE.Plane( normalVector, planeConstant );
 ```
