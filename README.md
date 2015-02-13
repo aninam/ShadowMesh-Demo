@@ -65,7 +65,7 @@ var lightPosition4D = new THREE.Vector4();
 lightPosition4D.x = light.position.x;
 lightPosition4D.y = light.position.y;
 lightPosition4D.z = light.position.z;
-lightPosition4D.w = 0.000001; // must be slightly > 0, due to 0.0 causing matrixInverse errors
+lightPosition4D.w = 0.001; // must be slightly > 0, due to 0.0 causing matrixInverse errors
 ```
 The above 'w' value indicates minimum divergence, like sunlight.  For a pointLight however, set the w value like this:
 ```javascript
