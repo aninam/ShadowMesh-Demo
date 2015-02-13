@@ -7,7 +7,6 @@ An example of creating a ShadowMesh: <br>
 ```javascript
 var shadow = new THREE.ShadowMesh( parentMesh );
 ```
-<br>
 This constuctor must take 1 argument: <br> 
 1. A THREE.Mesh() object - the shadow-casting parent mesh <br>
 <br>
