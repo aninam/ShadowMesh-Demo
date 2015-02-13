@@ -1,19 +1,25 @@
-# computePlanarShadow Demo
-A simple demo showing use of the THREE.Mesh.computePlanarShadow() method. Click on the link below: <br>
+# ShadowMesh Demo
+A simple demo showing use of the THREE.ShadowMesh() object. Click on the link below: <br>
 
-[computePlanarShadowDemo](http://erichlof.github.io/computePlanarShadow-Demo/computePlanarShadow-Demo.html)  <br>
+[ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-Demo.html)  <br>
 
-The function signature is: <br>
+An example creating a ShadowMesh: <br>
 ```javascript
-THREE.Mesh.computePlanarShadow( parentMesh, plane, lightPosition4D );
+var shadow = new THREE.ShadowMesh( parentMesh );
 ```
 <br>
-This method must take 3 arguments: <br> 
+This constuctor must take 1 argument: <br> 
 1. A THREE.Mesh() object - the shadow-casting parent mesh <br>
-2. A THREE.Plane() object - the plane in which the shadow will appear <br>
-3. A THREE.Vector4() object - a 4D vector describing the light's position and whether it is a pointLight or directionalLight. <br>
 <br>
-Example usage: <br>
+An example of updating the newly created ShadowMesh: <br>
+```javascript
+shadow.update( groundPlane, lightPosition4D );
+```
+This method must take 2 arguments: <br> 
+1. A THREE.Plane() object - the plane in which the shadow will appear <br>
+2. A THREE.Vector4() object - a 4D vector describing the light's position and whether it is a pointLight or directionalLight. <br>
+<br>
+Example setup and usage: <br>
 First create a THREE.js Light object and place it in the THREE.Scene. If it is a directional light, aim it accordingly using lookAt( scene.position ):
 ```javascript
 var light = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
@@ -29,25 +35,30 @@ var cubeParent = new THREE.Mesh( cubeGeometry, cubeMaterial );
 cubeParent.position.y = 5;
 scene.add( cubeParent );
 ```
-Next create a THREE.Mesh object that will be the actual shadow object.  This shadow Mesh will be a copy of its parent Mesh, but its geometry will get squashed down into the specified plane. Use the same geometry as the parent object's geometry. However, the shadow Mesh will use a different special material. Make the shadow material Basic (no lighting) and black in color, but slightly transparent so you can see the plane below the shadow a little bit. Also disable depthWrite and turn off the shadowMesh's frustumCulled property:
+Next create a THREE.ShadowMesh object that will follow its parent.  Then add the shadow mesh to the scene:
 ```javascript
-var shadowMaterial = new THREE.MeshBasicMaterial( { 
-		  color: 0x000000,
-		  transparent: true,
-		  opacity: 0.6,
-		  depthWrite: false
-} );
-var cubeShadow = new THREE.Mesh( cubeGeometry, shadowMaterial );
-cubeShadow.frustumCulled = false;
+var cubeShadow = new THREE.ShadowMesh( cubeParent );
 scene.add( cubeShadow );
+```
+We need to make a ground mesh so we can see the shadows on it.  Create a very flat box mesh.  Disable the ground material's depthTest so that shadows will always appear on top of the ground:
+```javascript
+  // the height of this box must be very thin = 0.01, so it can receive shadows correctly
+var groundGeometry = new THREE.BoxGeometry( 20, 0.01, 40 );
+var groundMaterial = new THREE.MeshLambertMaterial( { 
+	color: 0x00aa00,
+	depthTest: false
+} );
+groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+groundMesh.position.y = 0; // this value must match the planeConstant parameter below
+scene.add( groundMesh );
 ```
 Now create and define a THREE.Plane() object.  This is the plane in which the shadow will appear.  A THREE.Plane() is made up of 2 components: a THREE.Vector3 normal that points away from the plane's surface, and a numerical constant.  This constant can be thought of as the plane's 'distance' from the origin.  Here's how to define a plane in Three.js: 
 ```javascript
 var normalVector = new THREE.Vector3( 0, 1, 0 );
-var planeConstant = 0; // this value must match the floor/ground's y position
+var planeConstant = 0; // this value must match the ground's y position above
 var groundPlane = new THREE.Plane( normalVector, planeConstant );
 ```
-The above code defines a plane with a normal vector that points straight up from the plane's surface and a distance constant of 0 units from the origin.  This defines a plane that is like the floor or ground beneath us.  This assumes that the floor or ground's position is located at y = 0 units from the scene origin.  If your floor had a y position of -5, then you would also supply -5 as the planeConstant.  The matching of these numbers ensures that the shadow will appear level with the plane, and not incorrectly above or below it. <br>
+The above code defines a plane with a normal vector that points straight up from the plane's surface and a distance constant of 0 units from the origin.  This defines a plane that is like the floor or ground beneath us.  This assumes that the groundMesh's position is located at y = 0 units from the scene origin.  If your groundMesh had a y position of -5, then you would also supply -5 as the planeConstant.  The matching of these numbers ensures that the shadow will appear level with the ground, and not incorrectly above or below it. <br>
 <br>
 The last initialization step is setting up the 4D vector that defines the light source.  The first 3 components are the familiar x, y, and z position coordinates of the lightsource.  The 4th component, or w, is a value between 0.0 and 1.0 that indicates the amount of divergence that the light rays have from each other.  A value slightly greater than 0.0 specifies no divergence, or parallel rays, like sunlight.  A value of 1.0 specifies maximum divergence, like from a lightbulb or candle.
 ```javascript
@@ -61,10 +72,10 @@ The above 'w' value indicates minimum divergence, like sunlight.  For a pointLig
 ```javascript
 lightPosition4D.w = 1.0;
 ```
-Although there was quite a bit of setup, the actual usage of the shadow method is just 1 line of code!  Inside the animation loop, call the 'computePlanarShadow' function on the shadowMesh.  This will do all the math magic to squash the shadowMesh's geometry flat and place it flat on the plane:
+Although there was quite a bit of setup, the actual usage of the shadow method is just 1 line of code!  Inside the animation loop, call the 'update' function on the ShadowMesh.  This will do all the math magic to squash the ShadowMesh's geometry flat and place it flat on the desired plane:
 ```javascript
-cubeShadow.computePlanarShadow( cubeParent, groundPlane, lightPosition4D );
+cubeShadow.update( groundPlane, lightPosition4D );
 ```
-The above method automatically rotates, positions, and scales the shadow to match its parent object, like shadows in the real world do.
+The above method takes 2 parameters - the groundPlane (THREE.Plane) that was defined earlier, and the lightPosition4D vector (THREE.Vector4) that was also defined earlier.  The update method automatically flattens the shadow down onto the specified groundPlane plane object, then skews it using calculations from the supplied lightPosition4D vector.  It then automatically rotates, positions, and scales the shadow to match its parent object, like shadows in the real world do! <br>
 <br>
 More example usage can be found in the demo's .html source.
