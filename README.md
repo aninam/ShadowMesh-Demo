@@ -7,14 +7,14 @@ An example of creating a ShadowMesh: <br>
 ```javascript
 var shadow = new THREE.ShadowMesh( parentMesh );
 ```
-This constuctor must take 1 argument: <br> 
+This constuctor must take 1 parameter: <br> 
 1. A THREE.Mesh() object - the shadow-casting parent mesh <br>
 <br>
 An example of updating the newly created ShadowMesh: <br>
 ```javascript
 shadow.update( groundPlane, lightPosition4D );
 ```
-This method must take 2 arguments: <br> 
+This method must take 2 parameters: <br> 
 1. A THREE.Plane() object - the plane in which the shadow will appear <br>
 2. A THREE.Vector4() object - a 4D vector describing the light's position and whether it is a pointLight or directionalLight. <br>
 <br>
