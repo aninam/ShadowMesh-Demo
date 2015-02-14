@@ -40,16 +40,15 @@
 		var renderer = new THREE.WebGLRenderer();
 		
 		var pointLight = new THREE.PointLight( 'rgb(255,255,255)', 1 );
-		var useDirectionalLight = true;
 		
 		var floorMesh, ceilingMesh, rightWallMesh, leftWallMesh, backWallMesh;
 		var lightPanelMesh;
 		var cubeParent, cubeGroundShadow, cubeRightShadow, cubeLeftShadow, cubeBackShadow;
 		var cylinderParent, cylinderGroundShadow, cylinderRightShadow, cylinderLeftShadow, cylinderBackShadow;
 		var torusParent, torusGroundShadow, torusRightShadow, torusLeftShadow, torusBackShadow;
-		var planeConstant = 0.01; // this value must be > 0 to be seen on top of the plane
+		
 		var normalUpVector = new THREE.Vector3( 0, 1, 0 );
-		var floorPlane = new THREE.Plane( normalUpVector, planeConstant );
+		var floorPlane = new THREE.Plane( normalUpVector, 0.01 );
 		var normalLeftVector = new THREE.Vector3( -1, 0, 0 );
 		var rightPlane = new THREE.Plane( normalLeftVector, -4.99 );
 		var normalRightVector = new THREE.Vector3( 1, 0, 0 );
@@ -80,28 +79,25 @@
 			// FLOOR
 			var floorGeometry = new THREE.BoxGeometry( 10, 0.01, 10 );
 			var floorMaterial = new THREE.MeshPhongMaterial( {
-				//depthTest: false,
 				shininess: 10,
 				color: 0xffffff
 			} );
 			floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-			floorMesh.position.y = 0; //this value must match the planeConstant parameter above
+			floorMesh.position.y = 0;
 			scene.add( floorMesh );
 			
 			// CEILING
 			var ceilingGeometry = new THREE.BoxGeometry( 10, 0.01, 10 );
 			var ceilingMaterial = new THREE.MeshPhongMaterial( { 
-				//depthTest: false,
 				color: 0xffffff
 			} );
 			ceilingMesh = new THREE.Mesh( ceilingGeometry, ceilingMaterial );
-			ceilingMesh.position.y = 10; //this value must match the planeConstant parameter above
+			ceilingMesh.position.y = 10;
 			scene.add( ceilingMesh );
 			
 			// RIGHT GREEN WALL
 			var rightWallGeometry = new THREE.BoxGeometry( 0.01, 10, 10 );
 			var rightWallMaterial = new THREE.MeshPhongMaterial( {
-				//depthTest: false,
 				color: 0x00ff00
 			} );
 			rightWallMesh = new THREE.Mesh( rightWallGeometry, rightWallMaterial );
@@ -112,7 +108,6 @@
 			// LEFT RED WALL
 			var leftWallGeometry = new THREE.BoxGeometry( 0.01, 10, 10 );
 			var leftWallMaterial = new THREE.MeshPhongMaterial( { 
-				//depthTest: false,
 				color: 0xff0000
 			} );
 			leftWallMesh = new THREE.Mesh( leftWallGeometry, leftWallMaterial );
@@ -123,7 +118,6 @@
 			// BACK WALL
 			var backWallGeometry = new THREE.BoxGeometry( 10, 10, 0.01 );
 			var backWallMaterial = new THREE.MeshPhongMaterial( { 
-				//depthTest: false,
 				shininess: 1,
 				color: 0xffffff
 			} );
@@ -203,9 +197,8 @@
 
 		function animate() {
 			
-			//keep looping through animate()
 			requestAnimationFrame( animate );
-			//store how much time has passed since the last animation frame
+			
 			frameTime = clock.getDelta();
 			
 			cubeParent.rotation.x += 1.0 * frameTime;
@@ -250,7 +243,6 @@
 			// uncomment next line to move camera up and down
 			//camera.position.y = Math.sin( verticalAngle ) * 5 + 5;
 			
-			//render the scene with our camera
 			renderer.render( scene, camera );
 			
 
