@@ -55,7 +55,7 @@
 		var cylinderParent, cylinderShadow;
 		var torusParent, torusShadow;
 		var normalVector = new THREE.Vector3( 0, 1, 0 );
-		var planeConstant = 0; // this value must match the groundMesh's y position
+		var planeConstant = 0.01; // this value must be slightly higher than the groundMesh's y position of 0.0
 		var groundPlane = new THREE.Plane( normalVector, planeConstant );
 		var lightPosition4D = new THREE.Vector4();
 		var verticalAngle = 0;
@@ -80,7 +80,7 @@
 			lightPosition4D.y = sunLight.position.y;
 			lightPosition4D.z = sunLight.position.z;
 			// amount of light-ray divergence. Ranging from:
-			// 0.0000001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
+			// 0.001 = sunlight(min divergence) to 1.0 = pointlight(max divergence)
 			lightPosition4D.w = 0.001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
 			
 			// uncomment line below for max light-ray divergence, like lightbulb or candle
@@ -121,7 +121,7 @@
 				depthTest: false
 			} );
 			groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
-			groundMesh.position.y = 0; //this value must match the planeConstant parameter above
+			groundMesh.position.y = 0.0; //this value must be slightly lower than the planeConstant (0.01) parameter above
 			scene.add( groundMesh );
 			
 			// CUBE and CUBE's SHADOW
@@ -198,7 +198,7 @@
 			torusShadow.update( groundPlane, lightPosition4D );
 			
 			// uncomment next line to move camera up and down
-			//camera.position.y = Math.sin( verticalAngle ) * 2 + 2;
+			camera.position.y = Math.sin( verticalAngle ) * 2 + 2;
 			
 			//render the scene with our camera
 			renderer.render( scene, camera );
