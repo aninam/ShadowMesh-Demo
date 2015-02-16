@@ -116,10 +116,7 @@
 			lightHolder.visible = false;
 				//the height of this box must be very thin = 0.01 so it can receive shadows correctly
 			var groundGeometry = new THREE.BoxGeometry( 20, 0.01, 40 );
-			var groundMaterial = new THREE.MeshLambertMaterial( { 
-				color: 0x00aa00,
-				depthTest: false
-			} );
+			var groundMaterial = new THREE.MeshLambertMaterial( { color: 0x00aa00 } );
 			groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
 			groundMesh.position.y = 0.0; //this value must be slightly lower than the planeConstant (0.01) parameter above
 			scene.add( groundMesh );
