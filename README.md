@@ -5,7 +5,7 @@ A simple demo showing use of the THREE.ShadowMesh() object. Click on the link be
 A demo showing use of ShadowMeshes for groups of objects (which are not children of the Scene, but children of a THREE.Group parent). Click on the link below: <br>
 [ShadowMeshGroup-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMeshGroup-Demo.html)  <br>
 
-A more advanced Demo with multiple shadow instances for each wall: <br>
+A more advanced Demo with multiple shadow instances for each wall in a room: <br>
 [ShadowMesh-MultipleInstancesDemo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-MultipleInstancesDemo.html)  <br>
 
 An example of creating a ShadowMesh: <br>
