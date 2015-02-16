@@ -44,14 +44,11 @@ Next create a THREE.ShadowMesh object that will follow its parent.  Then add the
 var cubeShadow = new THREE.ShadowMesh( cubeParent );
 scene.add( cubeShadow );
 ```
-We need to make a ground mesh so we can see the shadows on it.  Create a very flat box mesh.  Disable the ground material's depthTest so that shadows will always appear on top of the ground:
+We need to make a ground mesh so we can see the shadows on it.  Create a very flat box mesh:
 ```javascript
   // the height of this box must be very thin = 0.01, so it can receive shadows correctly
 var groundGeometry = new THREE.BoxGeometry( 20, 0.01, 40 );
-var groundMaterial = new THREE.MeshLambertMaterial( { 
-	color: 0x00aa00,
-	depthTest: false
-} );
+var groundMaterial = new THREE.MeshLambertMaterial( { color: 0x00aa00 } );
 groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
 groundMesh.position.y = 0.0; // this value must be slightly lower the planeConstant parameter (0.01) below
 scene.add( groundMesh );
