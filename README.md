@@ -1,7 +1,9 @@
 # ShadowMesh Demo
 A simple demo showing use of the THREE.ShadowMesh() object. Click on the link below: <br>
-
 [ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-Demo.html)  <br>
+
+A demo showing use of ShadowMeshes for groups of objects (which are not children of the Scene, but children of a THREE.Group parent). Click on the link below: <br>
+[ShadowMeshGroup-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMeshGroup-Demo.html)  <br>
 
 A more advanced Demo with multiple shadow instances for each wall: <br>
 [ShadowMesh-MultipleInstancesDemo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-MultipleInstancesDemo.html)  <br>
@@ -51,16 +53,16 @@ var groundMaterial = new THREE.MeshLambertMaterial( {
 	depthTest: false
 } );
 groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
-groundMesh.position.y = 0; // this value must match the planeConstant parameter below
+groundMesh.position.y = 0.0; // this value must be slightly lower the planeConstant parameter (0.01) below
 scene.add( groundMesh );
 ```
 Now create and define a THREE.Plane() object.  This is the plane in which the shadow will appear.  A THREE.Plane() is made up of 2 components: a THREE.Vector3 normal that points away from the plane's surface, and a numerical constant.  This constant can be thought of as the plane's 'distance' from the origin.  Here's how to setup and define a plane in Three.js: 
 ```javascript
 var normalVector = new THREE.Vector3( 0, 1, 0 ); // this normal vector points straight up
-var planeConstant = 0; // this value must match the groundMesh's y position above
+var planeConstant = 0.01; // this value must be slightly higher than the groundMesh's y position (0.0) above
 var groundPlane = new THREE.Plane( normalVector, planeConstant );
 ```
-The above code defines a plane with a normal vector that points straight up from the plane's surface and a distance constant of 0 units from the origin.  This defines a plane that is like the floor or ground beneath us.  This assumes that the groundMesh's position is located at y = 0 units from the scene origin.  If your groundMesh had a y position of -5, then you would also supply -5 as the planeConstant.  The matching of these numbers ensures that the shadow will appear level with the ground, and not incorrectly above or below it. <br>
+The above code defines a plane with a normal vector that points straight up from the plane's surface and a distance constant of 0 units from the origin.  This defines a plane that is like the floor or ground beneath us.  This assumes that the groundMesh's position is located at y = 0 units from the scene origin.  The planeConstant value must be slightly higher than the groundMesh's y position.  If your groundMesh had a y position of 5, then you would supply 5.01 as the planeConstant. If your groundMesh had a y position of -5, then you would supply -4.99 as the planeConstant.  The correct setting of these numbers ensures that the shadow will appear on the ground, and not incorrectly above or below it. <br>
 <br>
 The last initialization step is setting up the 4D vector that defines the light source.  The first 3 components are the familiar x, y, and z position coordinates of the lightsource.  The 4th component, or w, is a value between 0.0 and 1.0 that indicates the amount of divergence that the light rays have from each other.  A value slightly greater than 0.0 specifies no divergence, or parallel rays, like sunlight.  A value of 1.0 specifies maximum divergence, like from a lightbulb or candle.
 ```javascript
