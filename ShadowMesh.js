@@ -21,6 +21,8 @@ THREE.ShadowMesh = function ( mesh ) {
 	
 	this.parentMeshMatrix = mesh.matrixWorld;
 	
+	this.matrixAutoUpdate = false;
+	
 	this.frustumCulled = false;
 
 };
@@ -63,8 +65,6 @@ THREE.ShadowMesh.prototype.update = function () {
 		sme[ 15 ] = dot - lightPosition4D.w * -plane.constant;
 		
 		this.matrix.multiplyMatrices( shadowMatrix, this.parentMeshMatrix );
-		
-		this.matrixAutoUpdate = false;
 
 	};
 
