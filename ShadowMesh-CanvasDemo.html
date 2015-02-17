@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title> ShadowMesh CanvasRenderer Demo </title>
+	<style>
+
+		body {
+			background-color: rgb(0, 0, 0);
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		
+	</style>
+</head>
+
+<body>
+	
+	<div id="container"></div>
+	
+	<input id="lightButton" style="position:fixed; right:2%; top:2%; font-size:12px;" type="button" value="Switch to PointLight" onclick="lightButtonHandler()">
+
+	<div id="help" style="position:fixed; left:2%; bottom:7%; font-family:arial; font-type:bold; color:rgb(255,255,255);">
+		ShadowMesh CanvasRenderer Demo
+	</div>
+	
+
+	<script src="three.min.js"></script> 
+	<script src="ShadowMesh.js"></script> 
+	
+	<script src="Projector.js"></script>
+	<script src="CanvasRenderer.js"></script>
+	
+	<script>
+		
+		//global variables and objects
+		
+		var SCREEN_WIDTH = window.innerWidth;
+		var SCREEN_HEIGHT = window.innerHeight;
+
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000 );
+		var clock = new THREE.Clock();
+		
+		var renderer = new THREE.CanvasRenderer();
+		
+		var sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
+		var useDirectionalLight = true;
+		var arrowHelper1, arrowHelper2, arrowHelper3;
+		var arrowDirection = new THREE.Vector3();
+		var arrowPosition1 = new THREE.Vector3();
+		var arrowPosition2 = new THREE.Vector3();
+		var arrowPosition3 = new THREE.Vector3();
+		var groundMesh;
+		var lightSphere, lightHolder;
+		var cubeParent, cubeShadow;
+		var cylinderParent, cylinderShadow;
+		var torusParent, torusShadow;
+		var normalVector = new THREE.Vector3( 0, 1, 0 );
+		var planeConstant = 0.01; // this value must be slightly higher than the groundMesh's y position of 0.0
+		var groundPlane = new THREE.Plane( normalVector, planeConstant );
+		var lightPosition4D = new THREE.Vector4();
+		var verticalAngle = 0;
+		var horizontalAngle = 0;
+		var frameTime = 0;
+		var TWO_PI = Math.PI * 2;
+		
+		
+		init();
+		
+		animate();
+		
+
+		function init() {
+			
+			camera.position.set( 0, 7, 10 );
+			camera.lookAt( scene.position );
+			scene.add( camera );
+			onWindowResize();
+			
+			sunLight.position.set( 4, 6, 0 );
+			lightPosition4D.x = sunLight.position.x;
+			lightPosition4D.y = sunLight.position.y;
+			lightPosition4D.z = sunLight.position.z;
+			lightPosition4D.w = 0.001; // must be slightly greater than 0, due to 0 causing matrixInverse errors
+			lightPosition4D.normalize();
+			
+			sunLight.lookAt( scene.position );
+			scene.add( sunLight );
+			
+			arrowDirection.subVectors( scene.position, sunLight.position ).normalize();
+			
+			arrowPosition1.copy( sunLight.position );
+			arrowHelper1 = new THREE.ArrowHelper( arrowDirection, arrowPosition1, 0.74, 0xffff00, 0.2, 0.08 );
+			scene.add( arrowHelper1 );
+			
+			arrowPosition2.copy( sunLight.position ).add( new THREE.Vector3( 0, 0.2, 0 ) );
+			arrowHelper2 = new THREE.ArrowHelper( arrowDirection, arrowPosition2, 0.74, 0xffff00, 0.2, 0.08 );
+			scene.add( arrowHelper2 );
+			
+			arrowPosition3.copy( sunLight.position ).add( new THREE.Vector3( 0, -0.2, 0 ) );
+			arrowHelper3 = new THREE.ArrowHelper( arrowDirection, arrowPosition3, 0.72, 0xffff00, 0.2, 0.08 );
+			scene.add( arrowHelper3 );
+			
+			var lightSphereGeometry = new THREE.SphereGeometry( 0.09 );
+			var lightSphereMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+			lightSphere = new THREE.Mesh( lightSphereGeometry, lightSphereMaterial );
+			scene.add( lightSphere );
+			lightSphere.visible = false;
+			
+			var lightHolderGeometry = new THREE.CylinderGeometry( 0.05, 0.05, 0.13 );
+			var lightHolderMaterial = new THREE.MeshBasicMaterial( { color: 0x444444 } );
+			lightHolder = new THREE.Mesh( lightHolderGeometry, lightHolderMaterial );
+			scene.add( lightHolder );
+			lightHolder.visible = false;
+				//the height of this box must be very thin = 0.01 so it can receive shadows correctly
+			var groundGeometry = new THREE.BoxGeometry( 20, 0.01, 20 );
+			var groundMaterial = new THREE.MeshBasicMaterial( { color: 0x00aa00 } );
+			groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+			groundMesh.position.y = -1.0; //this value must be slightly lower than the planeConstant (0.01) parameter above
+			groundMesh.position.z = -10.0;
+			scene.add( groundMesh );
+			
+			// CUBE and CUBE's SHADOW
+			var cubeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000, emissive: 0x200000 } );
+			cubeParent = new THREE.Mesh( cubeGeometry, cubeMaterial );
+			cubeParent.position.z = -1;
+			scene.add( cubeParent );
+			
+			cubeShadow = new THREE.ShadowMesh( cubeParent );
+			scene.add( cubeShadow );
+			
+			// CYLINDER and CYLINDER's SHADOW
+			var cylinderGeometry = new THREE.CylinderGeometry( 0.3, 0.3, 2 );
+			var cylinderMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff, emissive: 0x000020 } );
+			cylinderParent = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+			cylinderParent.position.z = -2.5;
+			scene.add( cylinderParent );
+			
+			cylinderShadow = new THREE.ShadowMesh( cylinderParent );
+			scene.add( cylinderShadow );
+			
+			// TORUS and TORUS' SHADOW
+			var torusGeometry = new THREE.TorusGeometry( 1, 0.2, 10, 16, TWO_PI );
+			var torusMaterial = new THREE.MeshLambertMaterial( { color: 0xff00ff, emissive: 0x200020 } );
+			torusParent = new THREE.Mesh( torusGeometry, torusMaterial );
+			torusParent.position.z = -6;
+			scene.add( torusParent );
+			
+			torusShadow = new THREE.ShadowMesh( torusParent );
+			scene.add( torusShadow );
+			
+			renderer.setClearColor( 0x333333 );
+			renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+			document.getElementById( "container" ).appendChild( renderer.domElement );
+			window.addEventListener( 'resize' , onWindowResize, false );
+			
+		} //end function init()
+		
+
+		function animate() {
+			
+			//keep looping through animate()
+			requestAnimationFrame( animate );
+			//store how much time has passed since the last animation frame
+			frameTime = clock.getDelta();
+			
+			cubeParent.rotation.x += 1.0 * frameTime;
+			cubeParent.rotation.y += 1.0 * frameTime;
+			
+			cylinderParent.rotation.y += 1.0 * frameTime;
+			cylinderParent.rotation.z -= 1.0 * frameTime;
+			
+			torusParent.rotation.x -= 1.0 * frameTime;
+			torusParent.rotation.y -= 1.0 * frameTime;
+			
+			horizontalAngle += 0.5 * frameTime;
+			if ( horizontalAngle > TWO_PI )
+				horizontalAngle -= TWO_PI;
+			cubeParent.position.x = Math.sin( horizontalAngle ) * 4;
+			cylinderParent.position.x = Math.sin( horizontalAngle ) * -4;
+			torusParent.position.x = Math.cos( horizontalAngle ) * 4;
+			
+			verticalAngle += 1.5 * frameTime;
+			if ( verticalAngle > TWO_PI )
+				verticalAngle -= TWO_PI;
+			cubeParent.position.y = Math.sin( verticalAngle ) * 2 + 2.9;
+			cylinderParent.position.y = Math.sin( verticalAngle ) * 2 + 3.1;
+			torusParent.position.y = Math.cos( verticalAngle ) * 2 + 3.3;
+			
+			// update the ShadowMeshes to follow their parent objects
+			cubeShadow.update( groundPlane, lightPosition4D );
+			cylinderShadow.update( groundPlane, lightPosition4D );
+			torusShadow.update( groundPlane, lightPosition4D );
+			
+			// uncomment next lines to move camera up and down
+			//camera.position.y = Math.sin( verticalAngle ) * 4 + 2;
+			//camera.lookAt( scene.position );
+			
+			//render the scene with our camera
+			renderer.render( scene, camera );
+			
+
+		} //end function animate()
+		
+		
+		function onWindowResize() {
+	
+			SCREEN_WIDTH = window.innerWidth;
+			SCREEN_HEIGHT = window.innerHeight;
+
+			renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+			camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+			camera.updateProjectionMatrix();
+			
+			document.getElementById( 'lightButton' ).style.fontSize = SCREEN_WIDTH * 0.02 + "px";
+			
+		} // end function onWindowResize()
+		
+		
+		function lightButtonHandler() {
+			
+			useDirectionalLight = !useDirectionalLight;
+			
+			if ( useDirectionalLight ) {
+				
+				sunLight.position.set( 4, 6, 0 );
+				sunLight.lookAt( scene.position );
+				
+				lightPosition4D.x = sunLight.position.x;
+				lightPosition4D.y = sunLight.position.y;
+				lightPosition4D.z = sunLight.position.z;
+				lightPosition4D.w = 0.001; // directionalLight value
+				lightPosition4D.normalize();
+				
+				arrowHelper1.visible = true;
+				arrowHelper2.visible = true;
+				arrowHelper3.visible = true;
+				
+				lightSphere.visible = false;
+				lightHolder.visible = false;
+				
+				document.getElementById( 'lightButton' ).value = "Switch to PointLight" ;
+				
+			}
+			else {
+				
+				sunLight.position.set( 0, 7, -2 );
+				sunLight.lookAt( scene.position );
+				lightSphere.position.copy( sunLight.position );
+				lightHolder.position.copy( lightSphere.position );
+				lightHolder.position.y += 0.12;
+				
+				lightPosition4D.x = sunLight.position.x;
+				lightPosition4D.y = sunLight.position.y;
+				lightPosition4D.z = sunLight.position.z;
+				lightPosition4D.w = 0.001;
+				
+				arrowHelper1.visible = false;
+				arrowHelper2.visible = false;
+				arrowHelper3.visible = false;
+				
+				lightSphere.visible = true;
+				lightHolder.visible = true;
+				
+				document.getElementById( 'lightButton' ).value = "Switch to DirectionalLight" ;
+				
+			}
+			
+		} // end function lightButtonHandler()
+		
+		
+	</script>
+	
+</body>
+
+</html>
