@@ -4,7 +4,7 @@
  * @author erichlof /  http://github.com/erichlof
  */
 
-// a shadow Mesh that follows its parent Mesh in the scene, but is confined to a single plane.
+// a shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
 
 THREE.ShadowMesh = function ( mesh ) {
 	
@@ -17,13 +17,13 @@ THREE.ShadowMesh = function ( mesh ) {
 		
 	} );
 	
-	THREE.Mesh.call( this, mesh.geometry, shadowMaterial );
+	THREE.Mesh.call( this, mesh.geometry.clone(), shadowMaterial );
 	
-	this.parentMeshMatrix = mesh.matrixWorld;
-	
-	this.matrixAutoUpdate = false;
+	this.meshMatrix = mesh.matrixWorld;
 	
 	this.frustumCulled = false;
+	
+	this.matrixAutoUpdate = false;
 
 };
 
@@ -64,7 +64,7 @@ THREE.ShadowMesh.prototype.update = function () {
 		sme[ 11 ] = - lightPosition4D.w * plane.normal.z;
 		sme[ 15 ] = dot - lightPosition4D.w * -plane.constant;
 		
-		this.matrix.multiplyMatrices( shadowMatrix, this.parentMeshMatrix );
+		this.matrix.multiplyMatrices( shadowMatrix, this.meshMatrix );
 
 	};
 
