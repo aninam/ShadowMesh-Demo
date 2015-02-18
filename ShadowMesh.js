@@ -17,7 +17,7 @@ THREE.ShadowMesh = function ( mesh ) {
 		
 	} );
 	
-	THREE.Mesh.call( this, mesh.geometry.clone(), shadowMaterial );
+	THREE.Mesh.call( this, mesh.geometry, shadowMaterial );
 	
 	this.meshMatrix = mesh.matrixWorld;
 	
