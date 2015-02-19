@@ -1,6 +1,6 @@
 # ShadowMesh Demo
 A simple demo showing use of the THREE.ShadowMesh() object. Click on the link below: <br>
-[ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMesh-Demo.html)  <br>
+[ShadowMesh-Demo](http://erichlof.github.io/ShadowMesh-Demo/webgl_shadowmesh.html)  <br>
 
 A demo showing use of ShadowMeshes for groups of objects (which are not children of the Scene, but children of a THREE.Group parent). Click on the link below: <br>
 [ShadowMeshGroup-Demo](http://erichlof.github.io/ShadowMesh-Demo/ShadowMeshGroup-Demo.html)  <br>
